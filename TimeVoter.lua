@@ -41,8 +41,7 @@ function PLUGIN:cmdVoteDay(netuser, cmd)	-- vote for day
 			self.Voted = {}		-- clears voted UID table	
 			end
 		else
-			self.Voted = {}
-			rust.SendChatToUser( netuser, "=TIMEVOTER=", "POLLS OPEN FROM 20.00 - 0.00 Hrs !")	-- msg if you try and vote when votinf not actuve
+			rust.SendChatToUser( netuser, "=TIMEVOTER=", "POLLS CURRENTLY CLOSED ! POLLS OPEN FROM 20.00 - 0.00 Hrs !")	-- msg if you try and vote when votinf not actuve
 		end
 	end
 end
@@ -61,8 +60,7 @@ function PLUGIN:cmdVoteNight(netuser, cmd)	-- vote for night
 			rust.BroadcastChat("=TIMEVOTER=", "A VOTE HAS BEEN CASTED FOR NIGHT !")
 			rust.BroadcastChat("=TIMEVOTER=", "VOTE(S) FOR DAY: " ..DayTally.. " [ " ..ReqVotes.. " ] VOTES TO PASS !")
 		else
-			self.Voted = {}
-			rust.SendChatToUser( netuser, "=TIMEVOTER=", "POLLS OPEN FROM 20.00 - 0.00 Hrs !")	-- msg if you try and vote when votinf not actuve
+			rust.SendChatToUser( netuser, "=TIMEVOTER=", "POLLS CURRENTLY CLOSED ! POLLS OPEN FROM 20.00 - 0.00 Hrs !")	-- msg if you try and vote when votinf not actuve
 		end
 	end
 end
@@ -80,9 +78,17 @@ function PLUGIN:cmdVoteTimer(netuser, cmd)
 	rust.SendChatToUser( netuser, "=TIMEVOTER=", "======== VOTING BEGINS AT 20.00 Hrs ========")
 	rust.SendChatToUser( netuser, "=TIMEVOTER=", "/vday   | To cast a day tally.")
 	rust.SendChatToUser( netuser, "=TIMEVOTER=", "/vnight | To void a day tally.")
-	rust.SendChatToUser( netuser, "=TIMEVOTER=", "ONE VOTE PER PLAYER | " ..ReqVotes.. " REQUIRED VOTES TO PASS")	
+	rust.SendChatToUser( netuser, "=TIMEVOTER=", "ONE VOTE PER PLAYER | " ..ReqVotes.. " REQUIRED VOTES TO PASS")
+	local tme = Rust.EnvironmentControlCenter.Singleton:GetTime()
+	if tme < tonumber(20.00) then
+		self.Voted = {}
+	end
 end
 
 function PLUGIN:SendHelpText(netuser)
 	rust.SendChatToUser( netuser, "/vtime | Displays info about day/night voting.")
+	local tme = Rust.EnvironmentControlCenter.Singleton:GetTime()
+	if tme < tonumber(20.00) then
+		self.Voted = {}
+	end
 end
